@@ -6,12 +6,17 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Check project files
+      - name: Find Android project
         run: |
-          echo "Checking Android project files"
-          find . -maxdepth 3 -type f
-          echo "Check complete"
+          find . -name "gradlew" -type f
+          find . -name "build.gradle" -type f
+
+      - name: Build APK
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug
