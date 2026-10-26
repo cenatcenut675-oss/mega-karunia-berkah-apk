@@ -1,0 +1,17 @@
+name: Build Mega Karunia Berkah APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check project ZIP
+        run: |
+          echo "Memeriksa file proyek Android..."
+          find . -maxdepth 2 -type f
+          echo "Selesai memeriksa file."
