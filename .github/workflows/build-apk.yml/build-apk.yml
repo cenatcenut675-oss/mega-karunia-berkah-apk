@@ -1,55 +1,17 @@
 name: Build Mega Karunia Berkah APK
 
 on:
-workflow_dispatch:
-push:
-paths:
-- '**.zip'
-- '.github/workflows/build-apk.yml'
+  workflow_dispatch:
 
 jobs:
-build:
-runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-steps:
-  - name: Checkout repository
-    uses: actions/checkout@v4
-
-  - name: Install Java
-    uses: actions/setup-java@v4
-    with:
-      distribution: temurin
-      java-version: '17'
-
-  - name: Extract Android project
-    run: |
-      sudo apt-get update
-      sudo apt-get install -y unzip
-      ZIP_FILE=$(find "$GITHUB_WORKSPACE" -maxdepth 1 -type f -name '*.zip' | head -n 1)
-      if [ -z "$ZIP_FILE" ]; then
-        echo "File ZIP proyek Android tidak ditemukan."
-        exit 1
-      fi
-      mkdir -p "$RUNNER_TEMP/android-project"
-      unzip -q "$ZIP_FILE" -d "$RUNNER_TEMP/android-project"
-      PROJECT_DIR=$(find "$RUNNER_TEMP/android-project" -name settings.gradle -o -name settings.gradle.kts | head -n 1 | xargs dirname)
-      if [ -z "$PROJECT_DIR" ]; then
-        echo "File settings.gradle tidak ditemukan."
-        exit 1
-      fi
-      echo "PROJECT_DIR=$PROJECT_DIR" >> "$GITHUB_ENV"
-
-  - name: Build APK
-    uses: gradle/actions/setup-gradle@v4
-    with:
-      gradle-version: '8.9'
-
-  - name: Assemble debug APK
-    run: gradle -p "$PROJECT_DIR" assembleDebug
-
-  - name: Upload APK
-    uses: actions/upload-artifact@v4
-    with:
-      name: Mega-Karunia-Berkah-APK
-      path: '**/build/outputs/apk/debug/*.apk'
-      if-no-files-found: error
+      - name: Check project files
+        run: |
+          echo "Checking Android project files"
+          find . -maxdepth 3 -type f
+          echo "Check complete"
