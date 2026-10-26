@@ -1,0 +1,22 @@
+name: Build Mega Karunia Berkah APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Find Android project
+        run: |
+          find . -name "gradlew" -type f
+          find . -name "build.gradle" -type f
+
+      - name: Build APK
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug
